@@ -1,0 +1,52 @@
+h1. Zehzinho's JQuery Plugins
+
+h2. AutocompleteCombo
+
+This plugin eases the task of creating lists of items. The user must define two fields in the page:
+
+* a text field which will have the autocomplete feature
+* the list of items container
+
+The plugin allows the user to define fields which are also appended to the list as the user selects items.
+
+h2. Example
+
+<pre>
+
+1.	$('#fieldId').autocompletecombo({
+2.    url: "autocomplete_search_url",
+3.    label: 'labelField',
+4.    id: 'idField',
+5.    target: 'container',
+6.    lang: 'en',
+7.    fields: [
+8.      {
+9          fieldId: 'unique_identifier',
+10.        isDisplayField: true,
+11.        value: 'valueField',
+12.        header: 'headerText',
+13.        inDisplayCell: true
+14.      },
+15.     {
+16.        fieldId: 'unique_identifier',
+17.        type: 'hidden',
+18.        name: 'item[#id]'
+19.      }
+20.		]
+21.	});
+
+</pre>
+
+Let's comment the most important lines:
+
+2: the url parameter. The plugin expects a JSON Object from this URL, let's call it "obj".
+3: The field which is going to be used as the label for the item.
+4. The field which is going to be used as the id for the item.
+5. The identifier of the element which is going to hold the list (usually a div).
+6. The language. Currently supported: "en" and "pt".
+7. The list of fields which will be inserted in the list.
+9. Each field must have unique identifier
+11. The field in "obj" which will be the value of this field.
+12. The list has headers, here we define the text of each field's column header.
+17: Current supported types: "hidden", "text" and "label" (default)
+18: We can use the "#id" token and the plugin will replace it by the id of the item (line 4)
