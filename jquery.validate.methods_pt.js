@@ -10,9 +10,9 @@ jQuery.extend(jQuery.validator.methods, {
     
     if (/^\d\d?\/\d\d?\/\d\d\d?\d?$/.test(value)) {
       value = value.split('/');
-      value[0] = parseInt(value[0]);
-      value[1] = parseInt(value[1]);
-      value[2] = parseInt(value[2]);
+      value[0] = parseInt(value[0], 10);
+      value[1] = parseInt(value[1], 10);
+      value[2] = parseInt(value[2], 10);
       
       return value[0] > 0 && value[0] <= 31 && value[1] > 0 && value[1] <= 12;
     }
