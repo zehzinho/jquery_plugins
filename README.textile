@@ -18,22 +18,21 @@ h2. Example
 3.    label: 'labelField',
 4.    id: 'idField',
 5.    target: 'container',
-6.    lang: 'en',
-7.    fields: [
-8.      {
-9          fieldId: 'unique_identifier',
-10.        isDisplayField: true,
-11.        value: 'valueField',
-12.        header: 'headerText',
-13.        inDisplayCell: true
-14.      },
-15.     {
-16.        fieldId: 'unique_identifier',
-17.        type: 'hidden',
-18.        name: 'item[#id]'
-19.      }
-20.		]
-21.	});
+6.    fields: [
+7.      {
+8          fieldId: 'unique_identifier',
+9.        isDisplayField: true,
+10.        value: 'valueField',
+11.        header: 'headerText',
+12.        inDisplayCell: true
+13.      },
+14.     {
+15.        fieldId: 'unique_identifier',
+16.        type: 'hidden',
+17.        name: 'item[#id]'
+18.      }
+19.		]
+20.	});
 
 </pre>
 
