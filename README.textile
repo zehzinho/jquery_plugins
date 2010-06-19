@@ -13,7 +13,7 @@ h2. Example
 
 <pre>
 
-1.	$('#fieldId').autocompletecombo({
+1. $('#fieldId').autocompletecombo({
 2.    url: "autocomplete_search_url",
 3.    label: 'labelField',
 4.    id: 'idField',
@@ -31,7 +31,7 @@ h2. Example
 16.        type: 'hidden',
 17.        name: 'item[#id]'
 18.      }
-19.		]
+19.   ]
 20.	});
 
 </pre>
