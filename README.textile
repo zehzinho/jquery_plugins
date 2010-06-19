@@ -38,14 +38,14 @@ h2. Example
 
 Let's comment the most important lines:
 
-2: the url parameter. The plugin expects a JSON Object from this URL, let's call it "obj".
+2: the url parameter. The plugin expects an array of JSON objects from this URL.
 3: The field which is going to be used as the label for the item.
 4. The field which is going to be used as the id for the item.
 5. The identifier of the element which is going to hold the list (usually a div).
 6. The language. Currently supported: "en" and "pt".
 7. The list of fields which will be inserted in the list.
 9. Each field must have unique identifier
-11. The field in "obj" which will be the value of this field.
+11. The field in the selected object which will be the value of this field.
 12. The list has headers, here we define the text of each field's column header.
 17: Current supported types: "hidden", "text" and "label" (default)
 18: We can use the "#id" token and the plugin will replace it by the id of the item (line 4)
