@@ -9,6 +9,10 @@ This plugin eases the task of creating lists of items. The user must define two 
 
 The plugin allows the user to define fields which are also appended to the list as the user selects items.
 
+h2. Prerequisites
+
+jquery.ui.autocomplete
+
 h2. Example
 
 <pre>
