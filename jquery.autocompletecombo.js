@@ -129,7 +129,7 @@
           otherCells += '<td>' + deleteTrigger + '</td>';
         }
 
-        $(containerSelector).append('<tr id="' + fieldId + '-row">' + displayCell + otherCells + '</tr>');
+        $(containerSelector).append('<tr class="autocompletecombo-item-row" id="' + fieldId + '-row">' + displayCell + otherCells + '</tr>');
 
         // callbacks usually can be run only after the field has been appended to the document
         for(var i = 0; i < afterAppendCallbacks.length; i++) {
