@@ -27,6 +27,27 @@
 
       autocompleterCombo = $.autocompleterCombo;
 
+      function objHasProperty(obj, prop) {
+        prop = prop.split('.');
+
+        var hasProperty = true;
+
+        var i = 0;
+
+        while (i < prop.length && hasProperty) {
+          if (!obj.hasOwnProperty(prop[i])) {
+            hasProperty = false;
+          }
+          else {
+            obj = eval('obj.' + prop[i]);
+          }
+
+          i++;
+        }
+
+        return hasProperty;
+      }
+
       function appendItem(ui, options) {
         var containerSelector = '#' + itemsHolderId.replace('.', '\\.') + ' tbody';
 
@@ -92,9 +113,31 @@
           
             newCell += '/>';
           }
+          else if (field.type == 'select') {
+            var selectOptions = eval("(" + field.options + ")");
+
+            var select = '<select>';
+
+            if (selectOptions.hasOwnProperty('empty')) {
+               select += '<option value="">' + selectOptions['empty'] + '</option>';
+            }
+            
+            for (var key in selectOptions) {
+              if (key != 'empty' && selectOptions.hasOwnProperty(key)) {
+                select += '<option value="' + key + '">' + selectOptions[key] + '</option>';
+              }
+            }
+
+            select += '</select>';
+
+            newCell += select;
+          }
           else if (field.type == 'label') {
             // the default is to only display the var
             newCell += '<span class="jquery-autocompletecombo-label">' + field.value + '</span>';
+          }
+          else {
+            alert('[jquery.autocompletecombo] Error: Field type not defined. Field: ' + field.fieldId);
           }
 
           if(field.inDisplayCell == true) {
