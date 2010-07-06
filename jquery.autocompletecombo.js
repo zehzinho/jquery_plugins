@@ -105,12 +105,13 @@
             newCell += '<input type="hidden" name="' + name + '" value="' + ui.item.id + '" id="' + fieldId + '" />';
           }
           else if (field.type == 'checkbox') {
-            newCell += '<input type="checkbox" name="' + name + '" value="' + ui.item.id + '" id="' + fieldId + '" ';
+            newCell += '<input type="checkbox" name="' + name + '" value="' + ui.item.id + '" id="' + fieldId + '"  ';
 
             if (field.value != 0) {
               newCell += ' checked="checked" ';
             }
-          
+
+            newCell += ' class="' + field.classes + '" ';
             newCell += '/>';
           }
           else if (field.type == 'select') {
