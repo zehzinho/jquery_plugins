@@ -273,11 +273,28 @@
             //process response
             $.each(data, function(i, val){
               var autocompleteItem = new Object();
-              var label = 'val.' + options.label;
+
+              var label = '';
+              
+              if (options.label.search('#') >= 0) {
+                var parts = options.label.split('#');
+                var firstLabel = 'val.' +  parts[0].trim();
+
+                var secParts = parts[1].split(' ');
+                var separator = secParts[0];
+                var secondLabel = 'val.' + secParts[1];
+
+                label = firstLabel + ' + \' ' + separator + ' \' + ' + secondLabel + '';
+              }
+              else {
+                label = 'val.' + options.label;
+              }
+
+              autocompleteItem.value = eval(label);
+              autocompleteItem.label = eval(label);
+
               var id = 'val.' + options.id;
 
-              autocompleteItem.label = eval(label);
-              autocompleteItem.value = eval(label);
               autocompleteItem.id = eval(id);
               autocompleteItem.original = val;
               suggestions.push(autocompleteItem);
