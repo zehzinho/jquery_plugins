@@ -244,6 +244,7 @@
 
         $('#' + options.target).append(containerDefinition);
 
+        var processedLabel = '';
         // loading data
         if (options.toLoad.length > 0) {
           for (var i = 0; i < options.toLoad.length; i++) {
@@ -251,7 +252,22 @@
             var ui = {};
             ui.item = {};
             ui.item.id = eval('item.' + options.id);
-            ui.item.label = eval('item.' + options.label);
+
+            if (options.label.search('#') >= 0) {
+              var parts = options.label.split('#');
+              var firstLabel = 'item.' +  parts[0].trim();
+
+              var secParts = parts[1].split(' ');
+              var separator = secParts[0];
+              var secondLabel = 'item.' + secParts[1];
+
+              processedLabel = firstLabel + ' + \' ' + separator + ' \' + ' + secondLabel + '';
+            }
+            else {
+              processedLabel = 'item.' + options.label;
+            }
+            
+            ui.item.label = eval(processedLabel);
             ui.item.original = item;
             appendItem(ui, options);
           }
