@@ -117,7 +117,7 @@
           else if (field.type == 'select') {
             var selectOptions = eval("(" + field.options + ")");
 
-            var select = '<select>';
+            var select = '<select name="' + name + '" class="' + field.classes + '">';
 
             if (selectOptions.hasOwnProperty('empty')) {
                select += '<option value="">' + selectOptions['empty'] + '</option>';
@@ -125,7 +125,13 @@
             
             for (var key in selectOptions) {
               if (key != 'empty' && selectOptions.hasOwnProperty(key)) {
-                select += '<option value="' + key + '">' + selectOptions[key] + '</option>';
+                select += '<option value="' + key + '" ';
+                
+                if (field.value == key) {
+                  select += ' selected="selected" ';
+                }
+
+                select += '>' + selectOptions[key] + '</option>';
               }
             }
 
