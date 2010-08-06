@@ -155,7 +155,7 @@
           }
 
           if (field.afterAppendCallback != '') {
-            var callback = field.afterAppendCallback.replace('#id', fieldId).replace('.', '\\\\.');
+            var callback = field.afterAppendCallback.replace(/#id/ig, fieldId).replace('.', '\\\\.');
             afterAppendCallbacks.push(callback);
           }
         }
