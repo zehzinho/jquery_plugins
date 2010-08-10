@@ -141,7 +141,7 @@
           }
           else if (field.type == 'label') {
             // the default is to only display the var
-            newCell += '<span class="jquery-autocompletecombo-label ' + field.classes + '">' + field.value + '</span>';
+            newCell += '<span id="' + fieldId + '" class="jquery-autocompletecombo-label ' + field.classes + '">' + field.value + '</span>';
           }
           else {
             alert('[jquery.autocompletecombo] Error: Field type not defined. Field: ' + field.fieldId);
