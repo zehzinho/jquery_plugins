@@ -16,7 +16,7 @@
       noItemsSelectedMsg: 'No items selected.'
     }
   };
-  
+
   $.extend($.fn, {
     autocompletecombo: function (settings) {
 
@@ -155,7 +155,7 @@
           }
 
           if (field.afterAppendCallback != '') {
-            var callback = field.afterAppendCallback.replace(/#id/ig, fieldId).replace('.', '\\\\.');
+            var callback = field.afterAppendCallback.replace(/#id/ig, fieldId).replace(/#original/ig, '$.autocompleterCombo.lastInsertedItem').replace('.', '\\\\.');
             afterAppendCallbacks.push(callback);
           }
         }
@@ -182,6 +182,8 @@
         $(containerSelector).append('<tr class="autocompletecombo-item-row" id="' + fieldId + '-row">' + displayCell + otherCells + '</tr>');
 
         // callbacks usually can be run only after the field has been appended to the document
+        $.autocompleterCombo.lastInsertedItem = ui.item.original;
+        
         for(var i = 0; i < afterAppendCallbacks.length; i++) {
           var callbackCall = afterAppendCallbacks[i];
           eval(callbackCall);
