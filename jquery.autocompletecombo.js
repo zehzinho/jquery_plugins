@@ -155,7 +155,7 @@
           }
 
           if (field.afterAppendCallback != '') {
-            var callback = field.afterAppendCallback.replace(/#id/ig, fieldId).replace(/#original/ig, '$.autocompleterCombo.lastInsertedItem').replace('.', '\\\\.');
+            var callback = field.afterAppendCallback.replace(/#id/ig, fieldId).replace(/\./ig, '\\\\.').replace(/#original/ig, '$.autocompleterCombo.lastInsertedItem');
             afterAppendCallbacks.push(callback);
           }
         }
