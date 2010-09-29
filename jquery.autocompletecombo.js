@@ -49,7 +49,13 @@
       }
 
       function appendItem(ui, options) {
-        var containerSelector = '#' + itemsHolderId.replace('.', '\\.') + ' tbody';
+        var containerSelector = '';
+
+        if (options.layout == 'table')
+          containerSelector = '#' + itemsHolderId.replace('.', '\\.') + ' tbody';
+        else if (options.layout == 'fluid') {
+          containerSelector = '#' + options.target;
+        }
 
         var displayCell = '<td>';
         var otherCells = '';
@@ -68,12 +74,29 @@
             defaultValue: '',
             header: '',
             inDisplayCell: false,
-            maxLength: 0
+            maxLength: 0,
+            defaultName: '',
+            div: ''
           };
+
+          if (options.defaultField) {
+            $.extend(field, options.defaultField);
+          }
 
           $.extend(field, options.fields[i]);
 
-          var name = field.name.replace('#id',ui.item.id);
+          var name = '';
+
+          if (field.name) {
+            name = field.name.replace('#id', ui.item.id);
+          }
+          else if (field.defaultName != '') {
+            name = field.defaultName.replace('#id', ui.item.id).replace('#fieldId', field.fieldId);
+          }
+          else {
+            name = field.fieldId + '[]';
+          }
+
           var fieldId = 'jquery-autocompletecombo-' + options.id + '-' + field.fieldId + '-' + ui.item.id;
 
           if (field.valueWhenLoading != '' && objHasProperty(ui.item.original, field.valueWhenLoading) != false) {
@@ -89,6 +112,15 @@
           }
 
           var newCell = '';
+
+          if (options.layout == 'fluid') {
+            var label = field.fieldId;
+
+            if (field.label)
+              label = field.label;
+
+            newCell += '<label for="' + fieldId + '">' + label + '</label>';
+          }
 
           if (field.type == 'text') {
             var maxLength = '';
@@ -120,13 +152,13 @@
             var select = '<select name="' + name + '" class="' + field.classes + '">';
 
             if (selectOptions.hasOwnProperty('empty')) {
-               select += '<option value="">' + selectOptions['empty'] + '</option>';
+              select += '<option value="">' + selectOptions['empty'] + '</option>';
             }
-            
+
             for (var key in selectOptions) {
               if (key != 'empty' && selectOptions.hasOwnProperty(key)) {
                 select += '<option value="' + key + '" ';
-                
+
                 if (field.value == key) {
                   select += ' selected="selected" ';
                 }
@@ -147,11 +179,16 @@
             alert('[jquery.autocompletecombo] Error: Field type not defined. Field: ' + field.fieldId);
           }
 
-          if(field.inDisplayCell == true) {
-            displayCell += newCell;
+          if (options.layout == 'table') {
+            if(field.inDisplayCell == true) {
+              displayCell += newCell;
+            }
+            else {
+              otherCells += '<td>' + newCell + '</td>';
+            }
           }
-          else {
-            otherCells += '<td>' + newCell + '</td>';
+          else  if (options.layout == 'fluid') {
+            otherCells += '<div class="jquery-autocompletecombo-fluid-cell ' + field.div + '">' + newCell + '</div>';
           }
 
           if (field.afterAppendCallback != '') {
@@ -168,9 +205,9 @@
 
         if(options.deleteEnabled) {
           var deleteTrigger = '';
-         
+
           if (options.deleteIcon != '') {
-          
+
           }
           else {
             deleteTrigger = '<span class="jquery-autocompletecombo-delete-trigger">' + options.deleteText + '</span>';
@@ -179,11 +216,20 @@
           otherCells += '<td>' + deleteTrigger + '</td>';
         }
 
-        $(containerSelector).append('<tr class="autocompletecombo-item-row" id="' + fieldId + '-row">' + displayCell + otherCells + '</tr>');
+        var newItem = null;
+
+        if (options.layout == 'table') {
+          newItem = '<tr class="autocompletecombo-item-row" id="' + fieldId + '-row">' + displayCell + otherCells + '</tr>';
+        }
+        else if (options.layout == 'fluid') {
+          newItem = '<div>' + otherCells + '</div>';
+        }
+
+        $(containerSelector).append(newItem);
 
         // callbacks usually can be run only after the field has been appended to the document
         $.autocompleterCombo.lastInsertedItem = ui.item.original;
-        
+
         for(var i = 0; i < afterAppendCallbacks.length; i++) {
           var callbackCall = afterAppendCallbacks[i];
           eval(callbackCall);
@@ -201,56 +247,59 @@
         toLoad: [],
         deleteEnabled: true,
         deleteIcon: '',
-        deleteText: autocompleterCombo.messages.deleteItemLabel
+        deleteText: autocompleterCombo.messages.deleteItemLabel,
+        layout: 'table' // can also be 'fluid'
       };
-    
+
       if (settings) $.extend(options, settings);
 
       var searchField = this;
-      var itemsHolderId = 'jquery-autocompletecombo-' + options.target + '-container';
-      var displayFieldVar = 'label';
-    
-      var containerSelector = '#' + itemsHolderId.replace('.', '\\.') + ' tbody';
 
-      if ($(containerSelector).length == 0) {
+      if (options.layout == 'table') {
+        var itemsHolderId = 'jquery-autocompletecombo-' + options.target + '-container';
+        var displayFieldVar = 'label';
 
-        var containerDefinition = '<table id="' + itemsHolderId + '" class="jquery-autocompletecombo-container ' + options.containerClasses + '"><thead><tr>';
+        var containerSelector = '#' + itemsHolderId.replace('.', '\\.') + ' tbody';
 
-        var numOfColumns = 0;
-       
-        for(var i=0; i < options.fields.length; i++) {
-          if (options.fields[i].header != null) {
-            containerDefinition += '<th>' + options.fields[i].header + '</th>';
-            numOfColumns++;
+        if ($(containerSelector).length == 0) {
+          var containerDefinition = '<table id="' + itemsHolderId + '" class="jquery-autocompletecombo-container ' + options.containerClasses + '"><thead><tr>';
+
+          var numOfColumns = 0;
+
+          for(var i=0; i < options.fields.length; i++) {
+            if (options.fields[i].header != null) {
+              containerDefinition += '<th>' + options.fields[i].header + '</th>';
+              numOfColumns++;
+            }
+
+            if (options.fields[i].isDisplayField == true) {
+              displayFieldVar = options.fields[i].value;
+            }
           }
 
-          if (options.fields[i].isDisplayField == true) {
-            displayFieldVar = options.fields[i].value;
+          if(options.deleteEnabled) {
+            containerDefinition += '<th></th>';
           }
+
+          containerDefinition += '</tr></thead>';
+
+          containerDefinition += '<tbody>';
+
+          options.toLoad = eval(options.toLoad);
+
+          if (options.toLoad == null) {
+            // guaranteeing we can use toLoad.length in the future
+            options.toLoad = [];
+          }
+
+          if (options.toLoad.length == 0) {
+            containerDefinition  += '<tr><td colspan="' + numOfColumns + '" class="jquery-autocompletecombo-container-no-items-selected-msg">' + autocompleterCombo.messages.noItemsSelectedMsg + '</td></tr>';
+          }
+
+          containerDefinition += '</tbody></table>';
+
+          $('#' + options.target).append(containerDefinition);
         }
-
-        if(options.deleteEnabled) {
-          containerDefinition += '<th></th>';
-        }
-
-        containerDefinition += '</tr></thead>';
-
-        containerDefinition += '<tbody>';
-
-        options.toLoad = eval(options.toLoad);
-
-        if (options.toLoad == null) {
-          // guaranteeing we can use toLoad.length in the future
-          options.toLoad = [];
-        }
-       
-        if (options.toLoad.length == 0) {
-          containerDefinition  += '<tr><td colspan="' + numOfColumns + '" class="jquery-autocompletecombo-container-no-items-selected-msg">' + autocompleterCombo.messages.noItemsSelectedMsg + '</td></tr>';
-        }
-
-        containerDefinition += '</tbody></table>';
-
-        $('#' + options.target).append(containerDefinition);
 
         var processedLabel = '';
         // loading data
@@ -274,14 +323,14 @@
             else {
               processedLabel = 'item.' + options.label;
             }
-            
+
             ui.item.label = eval(processedLabel);
             ui.item.original = item;
             appendItem(ui, options);
           }
         }
       }
-    
+
       this.autocomplete({
         minLength: 3,
         change: function() {
@@ -299,7 +348,7 @@
               var autocompleteItem = new Object();
 
               var label = '';
-              
+
               if (options.label.search('#') >= 0) {
                 var parts = options.label.split('#');
                 var firstLabel = 'val.' +  parts[0].trim();
