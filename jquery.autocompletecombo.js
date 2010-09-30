@@ -218,14 +218,18 @@
 
         var newItem = null;
 
+        var newCellsContainerId = 'jquery-autocompletecombo-' + options.target + '-' + ui.item.id + '-container';
+
         if (options.layout == 'table') {
           newItem = '<tr class="autocompletecombo-item-row" id="' + fieldId + '-row">' + displayCell + otherCells + '</tr>';
         }
         else if (options.layout == 'fluid') {
-          newItem = '<div>' + otherCells + '</div>';
+          newItem = '<div id="' + newCellsContainerId + '" class="jquery-autocompletecombo-fluid-cells-container">' + otherCells + '<hr></div>';
         }
 
         $(containerSelector).append(newItem);
+
+        resizeMe(newCellsContainerId);
 
         // callbacks usually can be run only after the field has been appended to the document
         $.autocompleterCombo.lastInsertedItem = ui.item.original;
@@ -239,7 +243,12 @@
       }
 
       $('.jquery-autocompletecombo-delete-trigger').live('click', function (){
-        $(this).parent().parent().remove();
+        if (options.layout == 'table') {
+          $(this).parent().parent().remove();
+        }
+        else if (options.layout == 'fluid') {
+          $(this).parent().remove();
+        }
       });
 
       var options = {
