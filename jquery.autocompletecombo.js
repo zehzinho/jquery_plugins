@@ -207,13 +207,18 @@
           var deleteTrigger = '';
 
           if (options.deleteIcon != '') {
-
+            deleteTrigger = '<img class="jquery-autocompletecombo-delete-trigger" src="' + options.deleteIcon + '" />'
           }
           else {
             deleteTrigger = '<span class="jquery-autocompletecombo-delete-trigger">' + options.deleteText + '</span>';
           }
 
-          otherCells += '<td>' + deleteTrigger + '</td>';
+          if (options.layout == 'table') {
+            otherCells += '<td>' + deleteTrigger + '</td>';
+          }
+          else if (options.layout == 'fluid') {
+            otherCells = deleteTrigger + otherCells;
+          }
         }
 
         var newItem = null;
